@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useCallback, useState, useEffect, useReducer } from "react";
 import "./App.css";
 
 const Heading = ({ title }: { title: string }) => <h2>{title}</h2>;
@@ -36,10 +36,14 @@ interface Payload {
 }
 
 interface Todo {
-    id: number;
-    done: boolean;
-    text: string;
+  id: number;
+  done: boolean;
+  text: string;
 }
+
+type ActionType =
+  | { type: "ADD"; text: string }
+  | { type: "REMOVE"; id: number };
 
 function App() {
   const onListClick = useCallback((item: string) => {
@@ -53,13 +57,39 @@ function App() {
       .then((json) => setPayload(json));
   }, []);
 
-  const [todos, dispatch] = useReducer(todos: Todo[])
+  const [todos, dispatch] = useReducer((state: Todo[], action: ActionType) => {
+    switch (action.type) {
+      case "ADD":
+        return [
+          ...state,
+          {
+            id: state.length + 1,
+            done: false,
+            text: action.text,
+          },
+        ];
+      case "REMOVE":
+        return state.filter(({ id }) => id !== action.id);
+      default:
+        throw new Error();
+    }
+  }, []);
+
   return (
     <div>
       <Heading title="Introduction" />
       <Box>Hello There</Box>
       <List items={["Item 1", "Item 2", "Item 3"]} onClick={onListClick} />
       <Box>{JSON.stringify(payload)}</Box>
+      <Heading title="Todo List" />
+      {todos.map((todo) => (
+        <div key={todo.id}>
+          {todo.text}
+          <button onClick={() => dispatch({ type: "REMOVE", id: todo.id })}>
+            Remove
+          </button>
+        </div>
+      ))}
     </div>
   );
 }
