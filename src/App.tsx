@@ -1,4 +1,10 @@
-import React, { useCallback, useState, useEffect, useReducer } from "react";
+import React, {
+  useCallback,
+  useState,
+  useEffect,
+  useReducer,
+  useRef,
+} from "react";
 import "./App.css";
 
 const Heading = ({ title }: { title: string }) => <h2>{title}</h2>;
@@ -75,6 +81,8 @@ function App() {
     }
   }, []);
 
+  const newTodoRef = useRef<HTMLInputElement>(null);
+
   return (
     <div>
       <Heading title="Introduction" />
@@ -90,6 +98,10 @@ function App() {
           </button>
         </div>
       ))}
+      <div>
+        <input type="text" ref={newTodoRef} />
+        <button onClick={onAddTodo}>Add Todo</button>
+      </div>
     </div>
   );
 }
