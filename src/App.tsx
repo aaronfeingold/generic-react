@@ -57,21 +57,20 @@ const useNumber = (initialValue: number) => useState<number>(initialValue);
 
 type UseNumberValue = ReturnType<typeof useNumber>[0];
 type UseNumberSetValue = ReturnType<typeof useNumber>[1];
-
-const Incrementer: React.FunctionComponent<{
-  value: UseNumberValue;
-  setValue: UseNumberSetValue;
-}> = ({ value, setValue }) => {
-  return <button onClick={() => setValue(value + 1)}>Add - {value}</button>;
-};
-
 const Button: React.FunctionComponent<
   React.DetailedHTMLProps<
     React.ButtonHTMLAttributes<HTMLButtonElement>,
     HTMLButtonElement
   >
-> = () => {
+> = ({ children, ...rest }) => {
   return <button {...rest}>{children}</button>;
+};
+
+const Incrementer: React.FunctionComponent<{
+  value: UseNumberValue;
+  setValue: UseNumberSetValue;
+}> = ({ value, setValue }) => {
+  return <Button onClick={() => setValue(value + 1)}>Add - {value}</Button>;
 };
 
 function App() {
