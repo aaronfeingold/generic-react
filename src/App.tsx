@@ -61,16 +61,31 @@ const Button: React.FunctionComponent<
   React.DetailedHTMLProps<
     React.ButtonHTMLAttributes<HTMLButtonElement>,
     HTMLButtonElement
-  >
-> = ({ children, ...rest }) => {
-  return <button {...rest}>{children}</button>;
+  > & { title?: string }
+> = ({ title, children, ...rest }) => {
+  return (
+    <button
+      {...rest}
+      style={{
+        backgroundColor: "blue",
+        color: "white",
+        padding: "0.5rem",
+        borderRadius: "0.5rem",
+        border: "none",
+      }}
+    >
+      {title ?? children}
+    </button>
+  );
 };
 
 const Incrementer: React.FunctionComponent<{
   value: UseNumberValue;
   setValue: UseNumberSetValue;
 }> = ({ value, setValue }) => {
-  return <Button onClick={() => setValue(value + 1)}>Add - {value}</Button>;
+  return (
+    <Button onClick={() => setValue(value + 1)} title={`Add - ${value}`} />
+  );
 };
 
 function App() {
