@@ -65,6 +65,15 @@ const Incrementer: React.FunctionComponent<{
   return <button onClick={() => setValue(value + 1)}>Add - {value}</button>;
 };
 
+const Button: React.FunctionComponent<
+  React.DetailedHTMLProps<
+    React.ButtonHTMLAttributes<HTMLButtonElement>,
+    HTMLButtonElement
+  >
+> = () => {
+  return <button {...rest}>{children}</button>;
+};
+
 function App() {
   const onListClick = useCallback((item: string) => {
     alert(item);
