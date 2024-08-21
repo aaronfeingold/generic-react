@@ -51,6 +51,12 @@ type ActionType =
   | { type: "ADD"; text: string }
   | { type: "REMOVE"; id: number };
 
+// use return type to avoid type inference
+
+const useNumber = (initialValue: number) => useState<number>(initialValue);
+
+type UseNumberValue = ReturnType<typeof useNumber>[0];
+
 const Incrementer: React.FunctionComponent<{
   value: number;
   setValue: React.Dispatch<React.SetStateAction<number>>;
