@@ -51,12 +51,19 @@ type ActionType =
   | { type: "ADD"; text: string }
   | { type: "REMOVE"; id: number };
 
+const Incrementer: React.FunctionComponent<{
+  value: number;
+  setValue: React.Dispatch<React.SetStateAction<number>>;
+}> = ({ value }) => {
+  return <button>Add - {value}</button>;
+};
+
 function App() {
   const onListClick = useCallback((item: string) => {
     alert(item);
   }, []);
   const [payload, setPayload] = useState<Payload | null>(null);
-
+  const [value, setValue] = useState(0);
   useEffect(() => {
     fetch("/data.json")
       .then((response) => response.json())
