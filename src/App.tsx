@@ -55,7 +55,7 @@ const Incrementer: React.FunctionComponent<{
   value: number;
   setValue: React.Dispatch<React.SetStateAction<number>>;
 }> = ({ value, setValue }) => {
-  return <button onClick={setValue(value + 1)}>Add - {value}</button>;
+  return <button onClick={() => setValue(value + 1)}>Add - {value}</button>;
 };
 
 function App() {
