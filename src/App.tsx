@@ -70,7 +70,7 @@ function App() {
     alert(item);
   }, []);
   const [payload, setPayload] = useState<Payload | null>(null);
-  const [value, setValue] = useState(0);
+  const [value, setValue] = useNumber(0);
   useEffect(() => {
     fetch("/data.json")
       .then((response) => response.json())
