@@ -1,5 +1,6 @@
 import React, { useCallback, useRef } from "react";
 import "./App.css";
+import useTodos from "./useTodos";
 
 const Heading = ({ title }: { title: string }) => <h2>{title}</h2>;
 
@@ -42,29 +43,32 @@ const Button: React.FunctionComponent<
 };
 
 function App() {
+  const { todos, addTodo, removeTodo } = useTodos([
+    { id: 0, text: "default todo", done: false },
+  ]);
+
   const newTodoRef = useRef<HTMLInputElement>(null);
+
   const onAddTodo = useCallback(() => {
     if (newTodoRef.current) {
-      dispatch({ type: "ADD", text: newTodoRef.current.value || "" });
+      addTodo(newTodoRef.current.value || "");
     }
   }, []);
 
   return (
     <div className="app-container">
-      <Heading title="Introduction" />
-      <Box>Hello There</Box>
+      <Heading title="New River Gorge Trip 08/2024" />
+      <Box>My Weekend Planner</Box>
       <Heading title="Todo List" />
       {todos.map((todo) => (
         <div key={todo.id}>
           {todo.text}
-          <button onClick={() => dispatch({ type: "REMOVE", id: todo.id })}>
-            Remove
-          </button>
+          <button onClick={() => removeTodo(todo.id)}>Remove</button>
         </div>
       ))}
       <div>
         <input type="text" ref={newTodoRef} />
-        <button onClick={onAddTodo}>Add Todo</button>
+        <button onClick={() => onAddTodo()}>Add Todo</button>
       </div>
     </div>
   );
