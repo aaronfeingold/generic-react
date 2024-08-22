@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useState,
-  useEffect,
-  useReducer,
-  useRef,
-} from "react";
+import React, { useCallback, useRef } from "react";
 import "./App.css";
 
 const Heading = ({ title }: { title: string }) => <h2>{title}</h2>;
@@ -24,39 +18,6 @@ const Box: React.FunctionComponent<BoxProps> = ({ children }) => (
   </div>
 );
 
-const List: React.FunctionComponent<{
-  items: string[];
-  onClick?: (item: string) => void;
-}> = ({ items, onClick }) => (
-  <ul>
-    {items.map((item, index) => (
-      <li key={index} onClick={() => onClick?.(item)}>
-        {item}
-      </li>
-    ))}
-  </ul>
-);
-
-interface Payload {
-  text: string;
-}
-
-interface Todo {
-  id: number;
-  done: boolean;
-  text: string;
-}
-
-type ActionType =
-  | { type: "ADD"; text: string }
-  | { type: "REMOVE"; id: number };
-
-// use return type to avoid type inference
-
-const useNumber = (initialValue: number) => useState<number>(initialValue);
-
-type UseNumberValue = ReturnType<typeof useNumber>[0];
-type UseNumberSetValue = ReturnType<typeof useNumber>[1];
 const Button: React.FunctionComponent<
   React.DetailedHTMLProps<
     React.ButtonHTMLAttributes<HTMLButtonElement>,
@@ -72,6 +33,7 @@ const Button: React.FunctionComponent<
         padding: "0.5rem",
         borderRadius: "0.5rem",
         border: "none",
+        fontSize: "xx-large",
       }}
     >
       {title ?? children}
@@ -79,59 +41,18 @@ const Button: React.FunctionComponent<
   );
 };
 
-const Incrementer: React.FunctionComponent<{
-  value: UseNumberValue;
-  setValue: UseNumberSetValue;
-}> = ({ value, setValue }) => {
-  return (
-    <Button onClick={() => setValue(value + 1)} title={`Add - ${value}`} />
-  );
-};
-
 function App() {
-  const onListClick = useCallback((item: string) => {
-    alert(item);
-  }, []);
-  const [payload, setPayload] = useState<Payload | null>(null);
-  const [value, setValue] = useNumber(0);
-  useEffect(() => {
-    fetch("/data.json")
-      .then((response) => response.json())
-      .then((json) => setPayload(json));
-  }, []);
-
-  const [todos, dispatch] = useReducer((state: Todo[], action: ActionType) => {
-    switch (action.type) {
-      case "ADD":
-        return [
-          ...state,
-          {
-            id: state.length + 1,
-            done: false,
-            text: action.text,
-          },
-        ];
-      case "REMOVE":
-        return state.filter(({ id }) => id !== action.id);
-      default:
-        throw new Error();
-    }
-  }, []);
-
   const newTodoRef = useRef<HTMLInputElement>(null);
   const onAddTodo = useCallback(() => {
     if (newTodoRef.current) {
       dispatch({ type: "ADD", text: newTodoRef.current.value || "" });
     }
   }, []);
+
   return (
-    <div>
+    <div className="app-container">
       <Heading title="Introduction" />
       <Box>Hello There</Box>
-      <List items={["Item 1", "Item 2", "Item 3"]} onClick={onListClick} />
-      <Box>{JSON.stringify(payload)}</Box>
-      <Incrementer value={value} setValue={setValue} />
-
       <Heading title="Todo List" />
       {todos.map((todo) => (
         <div key={todo.id}>
