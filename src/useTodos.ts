@@ -1,4 +1,4 @@
-import { useReducer, useCallback } from "react";
+import { useReducer, useCallback, createContext, useContext } from "react";
 
 interface Todo {
   id: number;
@@ -10,7 +10,15 @@ type ActionType =
   | { type: "ADD"; text: string }
   | { type: "REMOVE"; id: number };
 
-export default function useTodos(initialTodos: Todo[]): {
+type UseTodosManagerResult = ReturnType<typeof useTodosManager>;
+
+const TodoContext = createContext<UseTodosManagerResult>({
+  todos: [],
+  addTodo: () => {},
+  removeTodo: () => {},
+});
+
+export default function useTodosManager(initialTodos: Todo[]): {
   todos: Todo[];
   addTodo: (text: string) => void;
   removeTodo: (id: number) => void;
