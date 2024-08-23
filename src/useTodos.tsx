@@ -1,4 +1,4 @@
-import { useEffect, useCallback, createContext, useContext } from "react";
+import { useEffect, useCallback } from "react";
 import { createGlobalState } from "react-use";
 
 interface Todo {
@@ -9,20 +9,16 @@ interface Todo {
 
 const useGlobalTodos = createGlobalState<Todo[]>([]);
 
-type UseTodosManagerResult = ReturnType<typeof useTodosManager>;
-
-const TodoContext = createContext<UseTodosManagerResult>({
-  todos: [],
-  addTodo: () => {},
-  removeTodo: () => {},
-});
-
 export function useTodos(initialTodos: Todo[]): {
   todos: Todo[];
   addTodo: (text: string) => void;
   removeTodo: (id: number) => void;
 } {
   const [todos, setTodos] = useGlobalTodos();
+
+  useEffect(() => {
+    setTodos(initialTodos);
+  }, [setTodos, initialTodos]);
 
   const addTodo = useCallback(
     (text: string) =>
@@ -44,12 +40,3 @@ export function useTodos(initialTodos: Todo[]): {
 
   return { todos, addTodo, removeTodo };
 }
-
-export const TodosProvider: React.FunctionComponent<{
-  initialTodos: Todo[];
-  children: React.ReactNode;
-}> = ({ initialTodos, children }) => (
-  <TodoContext.Provider value={useTodos(initialTodos)}>
-    {children}
-  </TodoContext.Provider>
-);
