@@ -1,6 +1,6 @@
 import React, { useCallback, useRef } from "react";
 import "./App.css";
-import useTodos from "./useTodos";
+import { TodosProvider, useTodos, useAddTodo, useRemoveTodo } from "./useTodos";
 
 const Heading = ({ title }: { title: string }) => <h2>{title}</h2>;
 
@@ -73,9 +73,7 @@ function UL<T>({
 }
 
 function App() {
-  const { todos, addTodo, removeTodo } = useTodos([
-    { id: 0, text: "default todo", done: false },
-  ]);
+  const addTodo = useAddTodo();
 
   const newTodoRef = useRef<HTMLInputElement>(null);
 
@@ -90,24 +88,7 @@ function App() {
       <Heading title="New River Gorge Trip 08/2024" />
       <Box>My Weekend Planner</Box>
       <Heading title="Todo List" />
-      <UL
-        className="todo-list"
-        items={todos}
-        itemClick={(todo) => alert(todo.text)}
-        render={(todo) => (
-          <>
-            {todo.text}
-            <Button
-              onClick={(e) => {
-                e.preventDefault();
-                return removeTodo(todo.id);
-              }}
-            >
-              Remove
-            </Button>
-          </>
-        )}
-      />
+
       <div>
         <input type="text" ref={newTodoRef} />
         <button onClick={() => onAddTodo()}>Add Todo</button>
@@ -116,17 +97,33 @@ function App() {
   );
 }
 
+const JustShowTodos = () => {
+  const todos = useTodos();
+  return (
+    <UL
+      className="todo-list"
+      items={todos}
+      itemClick={(todo) => alert(todo.text)}
+      render={(todo) => <>{todo.text}</>}
+    />
+  );
+};
+
 const AppWrapper = () => {
   return (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "50% 50%",
-      }}
+    <TodosProvider
+      initialTodos={[{ id: 0, text: "default todo", done: false }]}
     >
-      <App />
-      <App />
-    </div>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "50% 50%",
+        }}
+      >
+        <App />
+        <JustShowTodos />
+      </div>
+    </TodosProvider>
   );
 };
 
