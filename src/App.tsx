@@ -93,7 +93,7 @@ function App() {
       <UL
         className="todo-list"
         items={todos}
-        itemClick={(todo) => alert(todo)}
+        itemClick={(todo) => alert(todo.text)}
         render={(todo) => (
           <>
             {todo.text}
@@ -116,4 +116,18 @@ function App() {
   );
 }
 
-export default App;
+const AppWrapper = () => {
+  return (
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "50% 50%",
+      }}
+    >
+      <App />
+      <App />
+    </div>
+  );
+};
+
+export default AppWrapper;
