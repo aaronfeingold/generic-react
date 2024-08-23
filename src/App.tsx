@@ -46,14 +46,27 @@ const Button: React.FunctionComponent<
 function UL<T>({
   items,
   render,
-}: {
+  itemClick,
+}: React.DetailedHTMLProps<
+  React.HTMLAttributes<HTMLUListElement>,
+  HTMLUListElement
+> & {
   items: T[];
   render: (item: T) => React.ReactNode;
+  itemClick: (item: T) => void;
 }) {
   return (
     <ul>
       {items.map((item, index) => (
-        <li key={index}>{render(item)}</li>
+        <li
+          onClick={(e) => {
+            e.preventDefault();
+            return itemClick(item);
+          }}
+          key={index}
+        >
+          {render(item)}
+        </li>
       ))}
     </ul>
   );
@@ -78,11 +91,20 @@ function App() {
       <Box>My Weekend Planner</Box>
       <Heading title="Todo List" />
       <UL
+        className="todo-list"
         items={todos}
+        itemClick={(todo) => alert(todo)}
         render={(todo) => (
           <>
             {todo.text}
-            <Button onClick={() => removeTodo(todo.id)}>Remove</Button>
+            <Button
+              onClick={(e) => {
+                e.preventDefault();
+                return removeTodo(todo.id);
+              }}
+            >
+              Remove
+            </Button>
           </>
         )}
       />
