@@ -43,6 +43,22 @@ const Button: React.FunctionComponent<
   );
 };
 
+function UL<T>({
+  items,
+  render,
+}: {
+  items: T[];
+  render: (item: T) => React.ReactNode;
+}) {
+  return (
+    <ul>
+      {items.map((item, index) => (
+        <li key={index}>{render(item)}</li>
+      ))}
+    </ul>
+  );
+}
+
 function App() {
   const { todos, addTodo, removeTodo } = useTodos([
     { id: 0, text: "default todo", done: false },
@@ -61,12 +77,15 @@ function App() {
       <Heading title="New River Gorge Trip 08/2024" />
       <Box>My Weekend Planner</Box>
       <Heading title="Todo List" />
-      {todos.map((todo) => (
-        <div key={todo.id}>
-          {todo.text}
-          <Button onClick={() => removeTodo(todo.id)}>Remove</Button>
-        </div>
-      ))}
+      <UL
+        items={todos}
+        render={(todo) => (
+          <>
+            {todo.text}
+            <Button onClick={() => removeTodo(todo.id)}>Remove</Button>
+          </>
+        )}
+      />
       <div>
         <input type="text" ref={newTodoRef} />
         <button onClick={() => onAddTodo()}>Add Todo</button>
