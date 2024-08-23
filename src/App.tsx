@@ -32,6 +32,7 @@ const Button: React.FunctionComponent<
         backgroundColor: "blue",
         color: "white",
         padding: "0.5rem",
+        margin: "20px",
         borderRadius: "0.5rem",
         border: "none",
         fontSize: "xx-large",
