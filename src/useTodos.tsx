@@ -27,31 +27,22 @@ function useTodosManager(initialTodos: Todo[]): {
   removeTodo: (id: number) => void;
 } {
   const [todos, setTodos] = useGlobalTodos();
-  const [todos, dispatch] = useReducer((state: Todo[], action: ActionType) => {
-    switch (action.type) {
-      case "ADD":
-        return [
-          ...state,
-          {
-            id: state.length + 1,
-            done: false,
-            text: action.text,
-          },
-        ];
-      case "REMOVE":
-        return state.filter(({ id }) => id !== action.id);
-      default:
-        throw new Error();
-    }
-  }, initialTodos);
 
   const addTodo = useCallback(
-    (text: string) => dispatch({ type: "ADD", text }),
-    []
+    (text: string) =>
+      setTodos([
+        ...todos,
+        {
+          id: todos.length + 1,
+          text: text,
+          done: false,
+        },
+      ]),
+    [todos, setTodos]
   );
 
   const removeTodo = useCallback(
-    (id: number) => dispatch({ type: "REMOVE", id }),
+    (removeId: number) => setTodos(todos.filter(({ id }) => id !== removeId)),
     []
   );
 
